@@ -28,9 +28,14 @@ export type Translations = {
     titleLine1: string;
     titleEmphasis: string;
     body: string;
+    trustItems: [string, string, string];
     ctaReserve: string;
     ctaMenu: string;
+    ctaNote: string;
     meta: string;
+  };
+  stats: {
+    items: { value: string; label: string }[];
   };
   services: {
     eyebrow: string;
@@ -38,7 +43,15 @@ export type Translations = {
     body: string;
     extras: string;
     enquire: string;
-    items: { name: string; note: string; price: string }[];
+    bookService: string;
+    popularBadge: string;
+    items: {
+      name: string;
+      note: string;
+      price: string;
+      duration: string;
+      popular?: boolean;
+    }[];
   };
   craft: {
     imageAlt: string;
@@ -51,21 +64,25 @@ export type Translations = {
     eyebrow: string;
     title: string;
     body: string;
+    viewLabel: string;
     items: { label: string; alt: string }[];
   };
   testimonials: {
-    featured: { quote: string; role: string };
-    secondary: { quote: string }[];
+    eyebrow: string;
+    title: string;
+    items: { quote: string; name: string; role: string }[];
   };
   contact: {
     eyebrow: string;
     title: string;
+    body: string;
     addressLabel: string;
     addressLine1: string;
     addressLine2: string;
     hoursLabel: string;
     hoursWeekday: string;
     hoursSaturday: string;
+    hoursSunday: string;
     phoneLabel: string;
     formEyebrow: string;
     nameLabel: string;
@@ -76,24 +93,27 @@ export type Translations = {
     messagePlaceholder: string;
     submit: string;
   };
-  cta: {
+  booking: {
     eyebrow: string;
     title: string;
     body: string;
-    button: string;
+    whatsappCta: string;
+    phoneCta: string;
+    note: string;
   };
-  footer: { rights: string };
-  images: {
-    heroAlt: string;
-    ctaAlt: string;
+  whatsapp: {
+    ariaLabel: string;
+    defaultMessage: string;
   };
+  footer: { tagline: string; rights: string };
+  images: { heroAlt: string; craftAlt: string; ctaAlt: string };
 };
 
 const en: Translations = {
   meta: {
-    title: "Piqu Barbershop | Premium Grooming",
+    title: "Piqu Barbershop | Premium Grooming Jakarta",
     description:
-      "A private grooming house for men who value precision, discretion, and craft.",
+      "Premium barbershop in Kemang, Jakarta. Master barbers, private chairs, and grooming trusted by 1,200+ clients since 2018.",
   },
   gate: {
     eyebrow: "Welcome",
@@ -109,135 +129,178 @@ const en: Translations = {
     mainAria: "Main navigation",
     mobileAria: "Mobile navigation",
     services: "Services",
-    craft: "Craft",
+    craft: "About",
     gallery: "Gallery",
     contact: "Contact",
-    reserve: "Reserve",
+    reserve: "Book",
     menu: "Menu",
     languageAria: "Language",
   },
   hero: {
-    eyebrow: "Est. 2012",
-    titleLine1: "Grooming,",
-    titleEmphasis: "refined.",
-    body: "A private barbershop for men who expect precision without pretense.",
-    ctaReserve: "Reserve a chair",
-    ctaMenu: "View the menu",
-    meta: "Downtown · By appointment · Walk-ins when available",
+    eyebrow: "Kemang, Jakarta · Since 2018",
+    titleLine1: "Confidence starts",
+    titleEmphasis: "in the chair.",
+    body: "Premium grooming for men who take their appearance seriously. Master barbers, private appointments, and finishes that look sharp from Monday morning to Friday night.",
+    trustItems: [
+      "Master barbers only",
+      "4.9★ · 1,200+ clients",
+      "Kemang · Private chairs",
+    ],
+    ctaReserve: "Book via WhatsApp",
+    ctaMenu: "View services & prices",
+    ctaNote: "Reply within minutes · Same-week slots available",
+    meta: "Jl. Kemang Raya · Open Tue–Sun · Walk-ins when available",
+  },
+  stats: {
+    items: [
+      { value: "5,000+", label: "Haircuts delivered" },
+      { value: "4.9", label: "Average rating" },
+      { value: "2018", label: "Established" },
+      { value: "1,200+", label: "Happy clients" },
+    ],
   },
   services: {
     eyebrow: "Services",
-    title: "The menu",
-    body: "Every service opens with a consultation and closes with a finish you can trust.",
-    extras: "Grey blending, father & son, and private events —",
-    enquire: "enquire",
+    title: "Transparent pricing",
+    body: "Every service includes a consultation, precision work, and a finish you can walk out proud of. No hidden fees.",
+    extras: "Grey blending, father & son packages, and private events —",
+    enquire: "contact us",
+    bookService: "Book this service",
+    popularBadge: "Most booked",
     items: [
       {
-        name: "Signature Cut",
-        note: "Consultation, cut, hot towel, and styled finish",
-        price: "$45",
+        name: "Classic Cut",
+        note: "Consultation, scissor & clipper cut, hot towel finish",
+        price: "Rp 85.000",
+        duration: "45 min",
       },
       {
-        name: "Hot Towel Shave",
-        note: "Straight razor, essential oils, and post-shave balm",
-        price: "$40",
+        name: "Premium Fade",
+        note: "Skin or shadow fade, line-up, styled finish",
+        price: "Rp 120.000",
+        duration: "50 min",
+        popular: true,
       },
       {
-        name: "The Executive",
-        note: "Cut, beard detail, and scalp massage",
-        price: "$75",
+        name: "Haircut + Wash",
+        note: "Cut, deep cleanse, scalp massage, and styling",
+        price: "Rp 100.000",
+        duration: "60 min",
       },
       {
-        name: "Beard Sculpt",
-        note: "Line-up, shape, and conditioning treatment",
-        price: "$30",
+        name: "Beard Grooming",
+        note: "Shape, line-up, hot towel, and conditioning balm",
+        price: "Rp 75.000",
+        duration: "35 min",
       },
     ],
   },
   craft: {
-    imageAlt: "Barber precisely cutting a client's hair",
+    imageAlt: "Master barber at work in Piqu Barbershop",
     eyebrow: "The house",
-    titleBefore: "Why gentlemen",
-    titleEmphasis: "choose Piqu",
+    titleBefore: "Built for men who",
+    titleEmphasis: "show up well",
     pillars: [
       {
         title: "Master barbers",
-        text: "Classical technique. Contemporary eye. No apprentices at your chair.",
+        text: "Every chair is staffed by experienced barbers — no trainees, no rush jobs.",
       },
       {
-        title: "Quiet luxury",
-        text: "Low light, leather, and time set aside — grooming as ritual.",
+        title: "Private atmosphere",
+        text: "Low lighting, quality leather, and time blocked per client. This is not a fast-food haircut.",
       },
       {
-        title: "Exacting standards",
-        text: "Premium products, precise finishes, and a result you feel before you leave.",
+        title: "Products that perform",
+        text: "Premium pomades, oils, and aftercare — chosen to hold up in Jakarta's heat and humidity.",
       },
     ],
   },
   gallery: {
     eyebrow: "Gallery",
-    title: "The work",
-    body: "A restrained glimpse — the craft speaks quietly.",
+    title: "The craft",
+    body: "A look inside our chairs, tools, and finishes — where detail is non-negotiable.",
+    viewLabel: "View",
     items: [
-      { label: "The fade", alt: "Close-up of a precision skin fade" },
-      { label: "The shave", alt: "Hot towel straight-razor shave" },
-      { label: "The house", alt: "Premium barbershop interior" },
+      { label: "Premium fade", alt: "Precision fade finish" },
+      { label: "Hot towel shave", alt: "Traditional straight-razor shave" },
+      { label: "The studio", alt: "Piqu barbershop interior Kemang" },
+      { label: "Beard detail", alt: "Beard grooming and line-up" },
+      { label: "The finish", alt: "Styled haircut final look" },
     ],
   },
   testimonials: {
-    featured: {
-      quote:
-        "The only place I trust with a fade. Understated, exacting, and never rushed.",
-      role: "Client since 2019",
-    },
-    secondary: [
+    eyebrow: "Reviews",
+    title: "What clients say",
+    items: [
       {
         quote:
-          "A shave that feels ceremonial. The room itself demands you slow down.",
+          "Sudah dua tahun potong di sini. Fade-nya rapi, barber-nya dengar dulu baru potong. Buat meeting pagi selalu percaya diri.",
+        name: "Budi Santoso",
+        role: "Marketing Manager · Jakarta Selatan",
       },
       {
         quote:
-          "Discreet, polished, and consistently excellent. This is what a modern barbershop should be.",
+          "Tempatnya tenang, nggak buru-buru. Cukur jenggot plus potong rambut, hasilnya bersih. Harga sesuai kualitas.",
+        name: "Andi Pratama",
+        role: "Karyawan bank · Setiabudi",
+      },
+      {
+        quote:
+          "Booking lewat WhatsApp gampang banget. Anak saya ikut potong juga — pelayanannya profesional, ramah tapi tetap rapi.",
+        name: "Rizky Hidayat",
+        role: "Pemilik usaha · Kemang",
       },
     ],
   },
   contact: {
-    eyebrow: "Contact",
-    title: "Visit us",
-    addressLabel: "Address",
-    addressLine1: "2847 Kingsway Avenue",
-    addressLine2: "Suite 12, Downtown",
-    hoursLabel: "Hours",
-    hoursWeekday: "Tue – Fri · 9am – 8pm",
-    hoursSaturday: "Sat · 8am – 6pm",
-    phoneLabel: "Telephone",
-    formEyebrow: "Enquiries",
+    eyebrow: "Visit us",
+    title: "Find the shop",
+    body: "We're in the heart of Kemang — easy to reach, easy to book. Drop in or message us first.",
+    addressLabel: "Location",
+    addressLine1: "Jl. Kemang Raya No. 12A",
+    addressLine2: "Kemang, Jakarta Selatan 12730",
+    hoursLabel: "Opening hours",
+    hoursWeekday: "Tue – Fri · 10.00 – 21.00",
+    hoursSaturday: "Sat – Sun · 09.00 – 20.00",
+    hoursSunday: "Mon · Closed",
+    phoneLabel: "Phone & WhatsApp",
+    formEyebrow: "Send a message",
     nameLabel: "Name",
-    namePlaceholder: "Name",
+    namePlaceholder: "Your name",
     emailLabel: "Email",
-    emailPlaceholder: "Email",
+    emailPlaceholder: "you@email.com",
     messageLabel: "Message",
-    messagePlaceholder: "Message",
-    submit: "Send enquiry →",
+    messagePlaceholder: "How can we help?",
+    submit: "Send message →",
   },
-  cta: {
-    eyebrow: "Reservations",
-    title: "Your chair awaits",
-    body: "Appointments are limited. Reserve yours with a single call.",
-    button: "Book appointment",
+  booking: {
+    eyebrow: "Ready when you are",
+    title: "Secure your chair today",
+    body: "Most clients book via WhatsApp — tell us your preferred service and time. We'll confirm within minutes.",
+    whatsappCta: "Chat on WhatsApp",
+    phoneCta: "Or call us",
+    note: "Free rescheduling up to 24 hours before your appointment",
   },
-  footer: { rights: "All rights reserved" },
+  whatsapp: {
+    ariaLabel: "Book appointment on WhatsApp",
+    defaultMessage: "Hi Piqu Barbershop, I'd like to book an appointment.",
+  },
+  footer: {
+    tagline: "Premium grooming · Kemang, Jakarta",
+    rights: "All rights reserved",
+  },
   images: {
-    heroAlt: "Warm-lit vintage barbershop interior",
-    ctaAlt: "Grooming tools on a dark wood counter",
+    heroAlt: "Premium barbershop interior with warm lighting",
+    craftAlt: "Barber performing a precision cut",
+    ctaAlt: "Barbershop tools and grooming products",
   },
 };
 
 const id: Translations = {
   meta: {
-    title: "Piqu Barbershop | Perawatan Pria Premium",
+    title: "Piqu Barbershop | Grooming Premium Jakarta",
     description:
-      "Rumah perawatan privat untuk pria yang menghargai presisi, ketenangan, dan keahlian.",
+      "Barbershop premium di Kemang, Jakarta. Tukang cukur master, kursi privat, dan perawatan dipercaya 1.200+ klien sejak 2018.",
   },
   gate: {
     eyebrow: "Selamat datang",
@@ -253,127 +316,171 @@ const id: Translations = {
     mainAria: "Navigasi utama",
     mobileAria: "Navigasi seluler",
     services: "Layanan",
-    craft: "Filosofi",
+    craft: "Tentang",
     gallery: "Galeri",
     contact: "Kontak",
-    reserve: "Reservasi",
+    reserve: "Booking",
     menu: "Menu",
     languageAria: "Bahasa",
   },
   hero: {
-    eyebrow: "Berdiri sejak 2012",
-    titleLine1: "Perawatan,",
-    titleEmphasis: "berkelas.",
-    body: "Barbershop privat untuk pria yang menghargai presisi tanpa berlebihan.",
-    ctaReserve: "Reservasi kursi",
-    ctaMenu: "Lihat layanan",
-    meta: "Pusat kota · Dengan reservasi · Tanpa reservasi jika kursi tersedia",
+    eyebrow: "Kemang, Jakarta · Sejak 2018",
+    titleLine1: "Percaya diri",
+    titleEmphasis: "dimulai di kursi.",
+    body: "Grooming premium untuk pria yang serius soal penampilan. Tukang cukur berpengalaman, janji temu privat, dan hasil yang rapi dari Senin pagi sampai Jumat malam.",
+    trustItems: [
+      "Hanya tukang cukur master",
+      "4.9★ · 1.200+ klien",
+      "Kemang · Kursi privat",
+    ],
+    ctaReserve: "Booking via WhatsApp",
+    ctaMenu: "Lihat layanan & harga",
+    ctaNote: "Balasan dalam hitungan menit · Slot minggu ini tersedia",
+    meta: "Jl. Kemang Raya · Buka Sel–Min · Walk-in jika ada kursi",
+  },
+  stats: {
+    items: [
+      { value: "5.000+", label: "Potongan rambut" },
+      { value: "4.9", label: "Rating rata-rata" },
+      { value: "2018", label: "Berdiri sejak" },
+      { value: "1.200+", label: "Klien puas" },
+    ],
   },
   services: {
     eyebrow: "Layanan",
-    title: "Daftar layanan",
-    body: "Setiap layanan diawali konsultasi dan diakhiri penampilan yang bisa Anda percaya.",
-    extras: "Penyamaran uban, ayah & anak, dan acara privat —",
+    title: "Harga transparan",
+    body: "Setiap layanan termasuk konsultasi, pengerjaan presisi, dan finishing yang bisa Anda banggakan. Tanpa biaya tersembunyi.",
+    extras: "Penyamaran uban, paket ayah & anak, dan acara privat —",
     enquire: "hubungi kami",
+    bookService: "Booking layanan ini",
+    popularBadge: "Paling laris",
     items: [
       {
-        name: "Potongan Signature",
-        note: "Konsultasi, potong, handuk panas, dan styling akhir",
-        price: "Rp 450.000",
+        name: "Classic Cut",
+        note: "Konsultasi, potong gunting & clipper, finish handuk panas",
+        price: "Rp 85.000",
+        duration: "45 menit",
       },
       {
-        name: "Cukur Handuk Panas",
-        note: "Pisau cukur, minyak esensial, dan balm pasca-cukur",
-        price: "Rp 400.000",
+        name: "Premium Fade",
+        note: "Skin atau shadow fade, line-up, styling akhir",
+        price: "Rp 120.000",
+        duration: "50 menit",
+        popular: true,
       },
       {
-        name: "Paket Eksekutif",
-        note: "Potong, detail jenggot, dan pijat kulit kepala",
-        price: "Rp 750.000",
+        name: "Haircut + Wash",
+        note: "Potong, cuci deep cleanse, pijat kepala, dan styling",
+        price: "Rp 100.000",
+        duration: "60 menit",
       },
       {
-        name: "Sculpt Jenggot",
-        note: "Garis, bentuk, dan perawatan kondisioner",
-        price: "Rp 300.000",
+        name: "Beard Grooming",
+        note: "Bentuk, line-up, handuk panas, dan balm kondisioner",
+        price: "Rp 75.000",
+        duration: "35 menit",
       },
     ],
   },
   craft: {
-    imageAlt: "Tukang cukur sedang mengerjakan potongan rambut",
+    imageAlt: "Tukang cukur master sedang bekerja di Piqu",
     eyebrow: "Ruang kami",
-    titleBefore: "Mengapa pria",
-    titleEmphasis: "memilih Piqu",
+    titleBefore: "Dibangun untuk pria",
+    titleEmphasis: "yang tampil maksimal",
     pillars: [
       {
         title: "Tukang cukur master",
-        text: "Teknik klasik. Mata kontemporer. Tanpa magang di kursi Anda.",
+        text: "Setiap kursi ditangani barber berpengalaman — tanpa trainee, tanpa pengerjaan terburu-buru.",
       },
       {
-        title: "Kemewahan yang tenang",
-        text: "Cahaya redup, kulit asli, dan waktu yang disediakan — perawatan sebagai ritual.",
+        title: "Suasana privat",
+        text: "Cahaya redup, kursi berkualitas, dan waktu khusus per klien. Bukan potong rambut ala fast food.",
       },
       {
-        title: "Standar tanpa kompromi",
-        text: "Produk premium, finishing presisi, dan hasil yang Anda rasakan sebelum beranjak.",
+        title: "Produk yang tahan",
+        text: "Pomade, minyak, dan aftercare premium — dipilih agar tahan di cuaca Jakarta.",
       },
     ],
   },
   gallery: {
     eyebrow: "Galeri",
-    title: "Karya kami",
-    body: "Sekilas yang sengaja terbatas — keahlian berbicara sendiri.",
+    title: "Keahlian kami",
+    body: "Sekilas kursi, alat, dan hasil kami — di mana detail tidak bisa ditawar.",
+    viewLabel: "Lihat",
     items: [
-      { label: "Fade presisi", alt: "Tampak dekat fade presisi" },
-      { label: "Cukur klasik", alt: "Cukur dengan handuk panas dan pisau cukur" },
-      { label: "Ruang kami", alt: "Interior barbershop premium" },
+      { label: "Premium fade", alt: "Hasil fade presisi" },
+      { label: "Cukur handuk panas", alt: "Cukur pisau cukur tradisional" },
+      { label: "Studio kami", alt: "Interior Piqu Barbershop Kemang" },
+      { label: "Detail jenggot", alt: "Grooming dan line-up jenggot" },
+      { label: "Finishing", alt: "Tampilan akhir potongan rambut" },
     ],
   },
   testimonials: {
-    featured: {
-      quote:
-        "Satu-satunya tempat saya percaya untuk fade. Sederhana, presisi, dan tidak pernah terburu-buru.",
-      role: "Pelanggan sejak 2019",
-    },
-    secondary: [
+    eyebrow: "Ulasan",
+    title: "Kata klien kami",
+    items: [
       {
         quote:
-          "Cukuran yang terasa seperti ritual. Ruangannya sendiri membuat Anda melambat.",
+          "Sudah dua tahun potong di sini. Fade-nya rapi, barber-nya dengar dulu baru potong. Buat meeting pagi selalu percaya diri.",
+        name: "Budi Santoso",
+        role: "Marketing Manager · Jakarta Selatan",
       },
       {
         quote:
-          "Diskret, rapi, dan konsisten luar biasa. Inilah barbershop modern seharusnya.",
+          "Tempatnya tenang, nggak buru-buru. Cukur jenggot plus potong rambut, hasilnya bersih. Harga sesuai kualitas.",
+        name: "Andi Pratama",
+        role: "Karyawan bank · Setiabudi",
+      },
+      {
+        quote:
+          "Booking lewat WhatsApp gampang banget. Anak saya ikut potong juga — pelayanannya profesional, ramah tapi tetap rapi.",
+        name: "Rizky Hidayat",
+        role: "Pemilik usaha · Kemang",
       },
     ],
   },
   contact: {
-    eyebrow: "Kontak",
-    title: "Kunjungi kami",
-    addressLabel: "Alamat",
-    addressLine1: "Jl. Sudirman No. 2847",
-    addressLine2: "Lantai 12, Pusat Kota",
+    eyebrow: "Kunjungi kami",
+    title: "Temukan salon kami",
+    body: "Di pusat Kemang — mudah dijangkau, mudah dibooking. Datang langsung atau chat dulu.",
+    addressLabel: "Lokasi",
+    addressLine1: "Jl. Kemang Raya No. 12A",
+    addressLine2: "Kemang, Jakarta Selatan 12730",
     hoursLabel: "Jam buka",
-    hoursWeekday: "Sel – Jum · 09.00 – 20.00",
-    hoursSaturday: "Sab · 08.00 – 18.00",
-    phoneLabel: "Telepon",
-    formEyebrow: "Pertanyaan",
+    hoursWeekday: "Sel – Jum · 10.00 – 21.00",
+    hoursSaturday: "Sab – Min · 09.00 – 20.00",
+    hoursSunday: "Sen · Tutup",
+    phoneLabel: "Telepon & WhatsApp",
+    formEyebrow: "Kirim pesan",
     nameLabel: "Nama",
-    namePlaceholder: "Nama",
+    namePlaceholder: "Nama Anda",
     emailLabel: "Email",
-    emailPlaceholder: "Email",
+    emailPlaceholder: "email@anda.com",
     messageLabel: "Pesan",
-    messagePlaceholder: "Pesan",
-    submit: "Kirim pertanyaan →",
+    messagePlaceholder: "Ada yang bisa kami bantu?",
+    submit: "Kirim pesan →",
   },
-  cta: {
-    eyebrow: "Reservasi",
-    title: "Kursi Anda menanti",
-    body: "Slot terbatas. Reservasi cukup dengan satu telepon.",
-    button: "Buat reservasi",
+  booking: {
+    eyebrow: "Siap kapan Anda butuh",
+    title: "Amankan kursi Anda hari ini",
+    body: "Kebanyakan klien booking lewat WhatsApp — sebutkan layanan dan waktu preferensi. Kami konfirmasi dalam hitungan menit.",
+    whatsappCta: "Chat via WhatsApp",
+    phoneCta: "Atau telepon kami",
+    note: "Reschedule gratis hingga 24 jam sebelum janji temu",
   },
-  footer: { rights: "Hak cipta dilindungi" },
+  whatsapp: {
+    ariaLabel: "Booking janji temu via WhatsApp",
+    defaultMessage:
+      "Halo Piqu Barbershop, saya ingin booking janji temu.",
+  },
+  footer: {
+    tagline: "Grooming premium · Kemang, Jakarta",
+    rights: "Hak cipta dilindungi",
+  },
   images: {
-    heroAlt: "Interior barbershop dengan pencahayaan hangat",
-    ctaAlt: "Detail peralatan grooming di meja kayu",
+    heroAlt: "Interior barbershop premium dengan pencahayaan hangat",
+    craftAlt: "Tukang cukur melakukan potongan presisi",
+    ctaAlt: "Alat barbershop dan produk grooming",
   },
 };
 

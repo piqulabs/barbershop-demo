@@ -4,36 +4,40 @@ import Image from "next/image";
 import Link from "next/link";
 import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { useLanguage } from "@/components/i18n/language-provider";
+import { WhatsAppButton } from "@/components/whatsapp-button";
+import { SITE, telUrl, whatsappUrl } from "@/lib/site-config";
 
-const PHONE = "tel:+15551234567";
-const PHONE_DISPLAY = "(555) 123-4567";
-
-const gallerySources = [
+const GALLERY_IMAGES = [
   {
-    src: "https://picsum.photos/seed/piqu-fade/1200/1600",
-    aspect:
-      "aspect-[4/5] max-h-[min(70vh,520px)] lg:max-h-none lg:aspect-auto lg:min-h-[520px]",
+    src: "https://picsum.photos/seed/piqu-g1/1400/1800",
+    layout:
+      "col-span-2 row-span-2 min-h-[280px] sm:col-span-7 sm:row-span-2 sm:min-h-0",
   },
   {
-    src: "https://picsum.photos/seed/piqu-shave/900/1200",
-    aspect:
-      "aspect-[4/5] max-h-[min(60vh,440px)] lg:max-h-none lg:aspect-auto lg:min-h-[420px]",
+    src: "https://picsum.photos/seed/piqu-g2/900/700",
+    layout: "col-span-1 row-span-1 min-h-[200px] sm:col-span-5 sm:min-h-[200px]",
   },
   {
-    src: "https://picsum.photos/seed/piqu-house/900/1200",
-    aspect:
-      "aspect-[4/5] max-h-[min(60vh,440px)] lg:max-h-none lg:aspect-auto lg:min-h-[420px]",
+    src: "https://picsum.photos/seed/piqu-g3/900/700",
+    layout: "col-span-1 row-span-1 min-h-[200px] sm:col-span-5 sm:min-h-[200px]",
+  },
+  {
+    src: "https://picsum.photos/seed/piqu-g4/800/600",
+    layout: "col-span-1 row-span-1 min-h-[180px] sm:col-span-4 sm:min-h-[180px]",
+  },
+  {
+    src: "https://picsum.photos/seed/piqu-g5/1200/600",
+    layout: "col-span-2 row-span-1 min-h-[180px] sm:col-span-8 sm:min-h-[200px]",
   },
 ] as const;
 
-const images = {
+const PAGE_IMAGES = {
   hero: "https://picsum.photos/seed/piqu-hero/1600/2000",
   craft: "https://picsum.photos/seed/piqu-craft/1800/1000",
-  cta: "https://picsum.photos/seed/piqu-cta/1600/900",
+  booking: "https://picsum.photos/seed/piqu-cta/1600/900",
 };
 
-const testimonialNames = ["Piqu Chen", "David Okamoto", "Rendy Osborn"];
-const pillarNums = ["01", "02", "03"] as const;
+const PILLAR_NUMS = ["01", "02", "03"] as const;
 
 function EditorialImage({
   src,
@@ -41,12 +45,14 @@ function EditorialImage({
   className = "",
   priority = false,
   sizes,
+  overlay = true,
 }: {
   src: string;
   alt: string;
   className?: string;
   priority?: boolean;
   sizes: string;
+  overlay?: boolean;
 }) {
   return (
     <div className={`relative overflow-hidden bg-[#111] ${className}`}>
@@ -56,13 +62,17 @@ function EditorialImage({
         fill
         priority={priority}
         sizes={sizes}
-        className="object-cover object-center saturate-[0.88] contrast-[1.05]"
+        className="gallery-img object-cover object-center saturate-[0.88] contrast-[1.05]"
       />
-      <div className="absolute inset-0 bg-black/30" aria-hidden />
-      <div
-        className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-black/10"
-        aria-hidden
-      />
+      {overlay && (
+        <>
+          <div className="absolute inset-0 bg-black/25" aria-hidden />
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/15 to-transparent"
+            aria-hidden
+          />
+        </>
+      )}
     </div>
   );
 }
@@ -77,7 +87,7 @@ function Section({
   className?: string;
 }) {
   return (
-    <section id={id} className={`py-16 sm:py-28 lg:py-40 ${className}`}>
+    <section id={id} className={`py-16 sm:py-24 lg:py-32 ${className}`}>
       {children}
     </section>
   );
@@ -101,41 +111,50 @@ function Container({
   );
 }
 
-function PrimaryButton({
+function GoldButton({
   href,
   children,
-  className = "",
+  external = false,
 }: {
   href: string;
   children: React.ReactNode;
-  className?: string;
+  external?: boolean;
 }) {
+  const cls = "btn-gold w-full sm:w-auto";
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={cls}>
+      {children}
+    </Link>
+  );
+}
+
+function TextLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <Link
       href={href}
-      className={`inline-flex w-full min-h-12 items-center justify-center border border-gold/60 bg-transparent px-8 py-3 text-xs font-medium uppercase tracking-[0.24em] text-foreground transition-colors duration-500 hover:border-gold hover:bg-gold/5 active:bg-gold/10 sm:w-auto sm:min-h-11 sm:px-10 sm:text-[0.6875rem] sm:tracking-[0.32em] ${className}`}
+      className="touch-target-block justify-center text-xs font-normal uppercase tracking-[0.22em] text-muted transition-colors duration-300 hover:text-gold sm:justify-start sm:text-[0.6875rem] sm:tracking-[0.28em]"
     >
       {children}
     </Link>
   );
 }
 
-function TextLink({
-  href,
-  children,
-  className = "",
-}: {
-  href: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
+function StarRating() {
   return (
-    <Link
-      href={href}
-      className={`touch-target-block justify-center text-xs font-normal uppercase tracking-[0.22em] text-muted transition-colors duration-300 hover:text-gold sm:justify-start sm:text-[0.6875rem] sm:tracking-[0.28em] ${className}`}
-    >
-      {children}
-    </Link>
+    <div className="flex gap-0.5 text-gold" aria-hidden>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <svg key={i} className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+      ))}
+    </div>
   );
 }
 
@@ -143,6 +162,10 @@ export function LandingPage() {
   const { t } = useLanguage();
 
   if (!t) return null;
+
+  const waBook = whatsappUrl(t.whatsapp.defaultMessage);
+  const waService = (name: string) =>
+    whatsappUrl(`${t.whatsapp.defaultMessage} (${name})`);
 
   const navLinks = [
     { href: "#services", label: t.nav.services },
@@ -182,12 +205,14 @@ export function LandingPage() {
 
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <LanguageSwitcher className="hidden sm:flex" />
-            <Link
-              href="#book"
+            <a
+              href={waBook}
+              target="_blank"
+              rel="noopener noreferrer"
               className="touch-target hidden text-[0.6875rem] uppercase tracking-[0.28em] text-foreground transition-colors hover:text-gold md:inline-flex"
             >
               {t.nav.reserve}
-            </Link>
+            </a>
 
             <details className="relative lg:hidden">
               <summary className="touch-target cursor-pointer list-none text-xs uppercase tracking-[0.22em] text-muted transition-colors group-open:text-foreground [&::-webkit-details-marker]:hidden">
@@ -211,12 +236,14 @@ export function LandingPage() {
                   </Link>
                 ))}
                 <div className="hairline mx-5 my-2" />
-                <Link
-                  href="#book"
+                <a
+                  href={waBook}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="touch-target-block w-full justify-start px-5 text-xs uppercase tracking-[0.2em] text-foreground active:bg-white/10"
                 >
                   {t.nav.reserve}
-                </Link>
+                </a>
               </nav>
             </details>
           </div>
@@ -225,20 +252,21 @@ export function LandingPage() {
       </header>
 
       <main>
+        {/* Hero */}
         <section
-          className="relative flex min-h-svh flex-col justify-end pb-12 pt-[calc(var(--header-height)+env(safe-area-inset-top)+2.5rem)] sm:pb-20 sm:pt-[calc(var(--header-height)+env(safe-area-inset-top)+3.5rem)] lg:pb-32"
+          className="relative flex min-h-svh flex-col justify-end pb-12 pt-[calc(var(--header-height)+env(safe-area-inset-top)+2.5rem)] sm:pb-16 sm:pt-[calc(var(--header-height)+env(safe-area-inset-top)+3.5rem)] lg:pb-24"
           aria-labelledby="hero-heading"
         >
           <div className="absolute inset-0 lg:hidden" aria-hidden>
             <EditorialImage
-              src={images.hero}
+              src={PAGE_IMAGES.hero}
               alt=""
               sizes="100vw"
               priority
-              className="h-full w-full opacity-35"
+              className="h-full w-full opacity-40"
             />
             <div
-              className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background"
+              className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/60 to-background"
               aria-hidden
             />
           </div>
@@ -252,31 +280,58 @@ export function LandingPage() {
                 <p className="eyebrow">{t.hero.eyebrow}</p>
                 <h1
                   id="hero-heading"
-                  className="headline mt-5 text-[clamp(2.75rem,11vw,6.5rem)] sm:mt-8"
+                  className="headline mt-5 text-[clamp(2.75rem,11vw,6.25rem)] sm:mt-8"
                 >
                   {t.hero.titleLine1}
                   <br />
                   <em>{t.hero.titleEmphasis}</em>
                 </h1>
-                <p className="body-lg mt-6 max-w-md sm:mt-10">{t.hero.body}</p>
-                <div className="mt-10 flex w-full max-w-sm flex-col gap-3 sm:mt-14 sm:max-w-none sm:flex-row sm:items-center sm:gap-8">
-                  <PrimaryButton href="#book">{t.hero.ctaReserve}</PrimaryButton>
-                  <TextLink href="#services">{t.hero.ctaMenu}</TextLink>
+                <p className="body-lg mt-6 max-w-lg leading-relaxed sm:mt-8">
+                  {t.hero.body}
+                </p>
+
+                <ul
+                  className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2"
+                  aria-label="Trust highlights"
+                >
+                  {t.hero.trustItems.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-center gap-2.5 text-xs font-light uppercase tracking-[0.16em] text-foreground/75 sm:text-[0.6875rem] sm:tracking-[0.2em]"
+                    >
+                      <span className="h-px w-4 shrink-0 bg-gold/70" aria-hidden />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-10 flex w-full max-w-sm flex-col gap-4 sm:mt-12 sm:max-w-none">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
+                    <GoldButton href={waBook} external>
+                      {t.hero.ctaReserve}
+                    </GoldButton>
+                    <TextLink href="#services">{t.hero.ctaMenu}</TextLink>
+                  </div>
+                  <p className="text-center text-[0.625rem] uppercase tracking-[0.22em] text-muted sm:text-start sm:text-[0.6875rem] sm:tracking-[0.24em]">
+                    {t.hero.ctaNote}
+                  </p>
                 </div>
-                <div className="mt-14 hidden lg:block">
+
+                <div className="mt-12 hidden lg:block">
                   <div className="hairline" />
-                  <p className="mt-6 text-sm font-light leading-relaxed text-muted">
+                  <p className="mt-5 text-sm font-light leading-relaxed text-muted">
                     {t.hero.meta}
                   </p>
                 </div>
               </div>
 
               <div
-                className="relative z-10 hidden aspect-[4/5] max-h-[min(72vh,680px)] lg:block lg:justify-self-end"
+                className="relative z-10 hidden aspect-[4/5] max-h-[min(72vh,640px)] lg:block lg:justify-self-end"
                 style={{ animation: "reveal 1.2s ease-out 0.12s both" }}
               >
+                <div className="absolute -inset-px border border-line-strong" aria-hidden />
                 <EditorialImage
-                  src={images.hero}
+                  src={PAGE_IMAGES.hero}
                   alt={t.images.heroAlt}
                   sizes="(max-width: 1024px) 0vw, 45vw"
                   priority
@@ -294,33 +349,76 @@ export function LandingPage() {
           </div>
         </section>
 
+        {/* Stats */}
+        <section
+          className="border-y border-line bg-[#0a0a0a]"
+          aria-label="Business statistics"
+        >
+          <Container className="py-0">
+            <dl className="grid grid-cols-2 divide-x divide-y divide-line lg:grid-cols-4 lg:divide-y-0">
+              {t.stats.items.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="flex flex-col items-center justify-center px-4 py-10 text-center sm:px-6 sm:py-12"
+                >
+                  <dt className="stat-value">{stat.value}</dt>
+                  <dd className="mt-3 text-[0.625rem] font-light uppercase tracking-[0.2em] text-muted sm:text-[0.6875rem] sm:tracking-[0.24em]">
+                    {stat.label}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </Container>
+        </section>
+
+        {/* Services */}
         <Section id="services">
           <Container>
-            <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-24">
-              <div className="lg:sticky lg:top-32 lg:self-start">
-                <p className="eyebrow">{t.services.eyebrow}</p>
-                <h2 className="headline mt-4 text-3xl sm:mt-6 sm:text-5xl lg:text-[3.25rem]">
-                  {t.services.title}
-                </h2>
-                <p className="body-lg mt-4 max-w-sm sm:mt-6">{t.services.body}</p>
-              </div>
-              <ul className="divide-y divide-line">
-                {t.services.items.map((service) => (
-                  <li key={service.name} className="group py-7 first:pt-0 sm:py-9">
-                    <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-                      <h3 className="headline text-xl sm:text-3xl">{service.name}</h3>
-                      <span className="font-display text-lg text-gold sm:shrink-0 sm:text-2xl">
+            <div className="mx-auto max-w-2xl text-center">
+              <p className="eyebrow">{t.services.eyebrow}</p>
+              <h2 className="headline mt-4 text-3xl sm:mt-6 sm:text-5xl">
+                {t.services.title}
+              </h2>
+              <p className="body-lg mx-auto mt-4 sm:mt-6">{t.services.body}</p>
+            </div>
+
+            <ul className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-5">
+              {t.services.items.map((service) => (
+                <li key={service.name}>
+                  <article className="service-card group relative flex h-full flex-col border border-line p-6 sm:p-8">
+                    {service.popular && (
+                      <span className="absolute end-6 top-0 -translate-y-1/2 bg-gold px-3 py-1 text-[0.625rem] font-medium uppercase tracking-[0.2em] text-background">
+                        {t.services.popularBadge}
+                      </span>
+                    )}
+                    <div className="flex items-start justify-between gap-4">
+                      <h3 className="headline text-xl sm:text-2xl">{service.name}</h3>
+                      <span className="shrink-0 font-display text-lg text-gold sm:text-xl">
                         {service.price}
                       </span>
                     </div>
-                    <p className="mt-2 text-sm font-light leading-relaxed text-muted sm:mt-3">
+                    <p className="mt-3 flex-1 text-sm font-light leading-relaxed text-muted">
                       {service.note}
                     </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <p className="mt-10 text-center text-sm font-light leading-relaxed text-muted sm:mt-16">
+                    <div className="mt-6 flex items-center justify-between border-t border-line pt-5">
+                      <span className="text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+                        {service.duration}
+                      </span>
+                      <a
+                        href={waService(service.name)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[0.625rem] font-medium uppercase tracking-[0.2em] text-gold opacity-0 transition-opacity group-hover:opacity-100 sm:opacity-100"
+                      >
+                        {t.services.bookService} →
+                      </a>
+                    </div>
+                  </article>
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-10 text-center text-sm font-light leading-relaxed text-muted sm:mt-14">
               {t.services.extras}{" "}
               <Link
                 href="#contact"
@@ -332,30 +430,31 @@ export function LandingPage() {
           </Container>
         </Section>
 
+        {/* About / Craft */}
         <Section id="craft" className="border-t border-line">
           <Container>
             <EditorialImage
-              src={images.craft}
-              alt={t.craft.imageAlt}
+              src={PAGE_IMAGES.craft}
+              alt={t.images.craftAlt}
               sizes="(max-width: 1024px) 100vw, 1152px"
               className="aspect-[3/2] sm:aspect-[16/9] lg:aspect-[21/9]"
             />
           </Container>
-          <Container narrow className="mt-12 sm:mt-28">
+          <Container narrow className="mt-12 sm:mt-20">
             <p className="eyebrow text-center">{t.craft.eyebrow}</p>
             <h2 className="headline mt-4 text-center text-3xl sm:mt-6 sm:text-5xl">
               {t.craft.titleBefore} <em>{t.craft.titleEmphasis}</em>
             </h2>
-            <ul className="mt-12 space-y-10 sm:mt-20 sm:space-y-20">
+            <ul className="mt-12 space-y-10 sm:mt-16 sm:space-y-16">
               {t.craft.pillars.map((pillar, index) => (
                 <li
-                  key={pillarNums[index]}
-                  className="grid gap-4 border-t border-line pt-8 sm:grid-cols-[4rem_1fr] sm:gap-10 sm:pt-12"
+                  key={PILLAR_NUMS[index]}
+                  className="grid gap-4 border-t border-line pt-8 sm:grid-cols-[4rem_1fr] sm:gap-10 sm:pt-10"
                 >
-                  <span className="eyebrow text-muted">{pillarNums[index]}</span>
+                  <span className="eyebrow text-muted">{PILLAR_NUMS[index]}</span>
                   <div>
-                    <h3 className="headline text-xl sm:text-3xl">{pillar.title}</h3>
-                    <p className="body-lg mt-3 max-w-lg sm:mt-4">{pillar.text}</p>
+                    <h3 className="headline text-xl sm:text-2xl">{pillar.title}</h3>
+                    <p className="body-lg mt-3 max-w-lg">{pillar.text}</p>
                   </div>
                 </li>
               ))}
@@ -363,33 +462,40 @@ export function LandingPage() {
           </Container>
         </Section>
 
+        {/* Gallery — masonry */}
         <Section id="gallery">
           <Container>
-            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end sm:gap-6">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end sm:gap-8">
               <div>
                 <p className="eyebrow">{t.gallery.eyebrow}</p>
                 <h2 className="headline mt-4 text-3xl sm:mt-6 sm:text-5xl">
                   {t.gallery.title}
                 </h2>
               </div>
-              <p className="max-w-xs text-sm font-light leading-relaxed text-muted">
+              <p className="max-w-sm text-sm font-light leading-relaxed text-muted">
                 {t.gallery.body}
               </p>
             </div>
-            <div className="mt-10 grid grid-cols-1 gap-3 sm:mt-16 sm:gap-4 lg:grid-cols-3 lg:gap-5">
+
+            <div className="mt-10 grid grid-cols-2 gap-3 auto-rows-fr sm:mt-14 sm:grid-cols-12 sm:gap-4">
               {t.gallery.items.map((item, index) => (
                 <figure
                   key={item.label}
-                  className={`relative ${gallerySources[index].aspect}`}
+                  className={`gallery-item ${GALLERY_IMAGES[index].layout}`}
                 >
-                  <EditorialImage
-                    src={gallerySources[index].src}
+                  <Image
+                    src={GALLERY_IMAGES[index].src}
                     alt={item.alt}
-                    sizes="(max-width: 1024px) 100vw, 33vw"
-                    className="absolute inset-0 h-full w-full"
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    className="gallery-img object-cover object-center saturate-[0.85] contrast-[1.05]"
                   />
-                  <figcaption className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-8">
-                    <p className="eyebrow text-gold/80">{item.label}</p>
+                  <div className="gallery-overlay" aria-hidden />
+                  <figcaption className="gallery-caption absolute inset-x-0 bottom-0 z-10 flex items-end justify-between p-4 sm:p-6">
+                    <p className="eyebrow text-gold/90">{item.label}</p>
+                    <span className="hidden text-[0.625rem] uppercase tracking-[0.24em] text-foreground/60 sm:inline">
+                      {t.gallery.viewLabel}
+                    </span>
                   </figcaption>
                 </figure>
               ))}
@@ -397,80 +503,95 @@ export function LandingPage() {
           </Container>
         </Section>
 
-        <Section id="testimonials" className="border-t border-line">
-          <Container narrow>
-            <blockquote className="text-center">
-              <p className="headline text-[clamp(1.5rem,5vw,2.75rem)] leading-snug font-light italic text-foreground/95">
-                &ldquo;{t.testimonials.featured.quote}&rdquo;
-              </p>
-              <footer className="mt-8 sm:mt-10">
-                <cite className="not-italic">
-                  <p className="text-xs uppercase tracking-[0.24em] text-foreground sm:text-[0.6875rem] sm:tracking-[0.32em]">
-                    {testimonialNames[0]}
-                  </p>
-                  <p className="mt-2 text-sm font-light text-muted">
-                    {t.testimonials.featured.role}
-                  </p>
-                </cite>
-              </footer>
-            </blockquote>
-            <div className="hairline mx-auto mt-12 max-w-xs sm:mt-20" />
-            <div className="mt-12 grid gap-10 text-center sm:mt-16 sm:grid-cols-2 sm:gap-8 sm:text-left">
-              {t.testimonials.secondary.map((item, index) => (
-                <blockquote key={testimonialNames[index + 1]}>
-                  <p className="text-sm font-light leading-relaxed text-muted">
-                    &ldquo;{item.quote}&rdquo;
-                  </p>
-                  <footer className="mt-5">
-                    <cite className="not-italic text-[0.6875rem] uppercase tracking-[0.28em] text-foreground/80">
-                      {testimonialNames[index + 1]}
-                    </cite>
-                  </footer>
-                </blockquote>
-              ))}
+        {/* Testimonials */}
+        <Section id="testimonials" className="border-t border-line bg-[#0a0a0a]">
+          <Container>
+            <div className="mx-auto max-w-2xl text-center">
+              <p className="eyebrow">{t.testimonials.eyebrow}</p>
+              <h2 className="headline mt-4 text-3xl sm:mt-6 sm:text-5xl">
+                {t.testimonials.title}
+              </h2>
             </div>
+            <ul className="mt-12 grid gap-5 sm:mt-16 lg:grid-cols-3 lg:gap-6">
+              {t.testimonials.items.map((item) => (
+                <li key={item.name}>
+                  <blockquote className="flex h-full flex-col border border-line p-6 sm:p-8">
+                    <StarRating />
+                    <p className="mt-5 flex-1 text-sm font-light leading-relaxed text-foreground/85">
+                      &ldquo;{item.quote}&rdquo;
+                    </p>
+                    <footer className="mt-6 border-t border-line pt-5">
+                      <cite className="not-italic">
+                        <p className="text-sm font-normal text-foreground">{item.name}</p>
+                        <p className="mt-1 text-xs font-light text-muted">{item.role}</p>
+                      </cite>
+                    </footer>
+                  </blockquote>
+                </li>
+              ))}
+            </ul>
           </Container>
         </Section>
 
+        {/* Contact */}
         <Section id="contact">
           <Container>
-            <div className="grid gap-12 lg:grid-cols-2 lg:gap-32">
+            <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
               <div>
                 <p className="eyebrow">{t.contact.eyebrow}</p>
                 <h2 className="headline mt-4 text-3xl sm:mt-6 sm:text-5xl">
                   {t.contact.title}
                 </h2>
-                <dl className="mt-10 space-y-8 sm:mt-14 sm:space-y-10">
-                  <div>
+                <p className="body-lg mt-4 max-w-md">{t.contact.body}</p>
+
+                <dl className="mt-10 space-y-8 sm:mt-12">
+                  <div className="border-s-2 border-gold/40 ps-5">
                     <dt className="eyebrow text-muted">{t.contact.addressLabel}</dt>
-                    <dd className="mt-3 text-base font-light leading-relaxed text-foreground/90">
+                    <dd className="mt-2 text-base font-light leading-relaxed text-foreground/90">
                       {t.contact.addressLine1}
                       <br />
                       {t.contact.addressLine2}
                     </dd>
+                    <a
+                      href={`https://maps.google.com/?q=${SITE.mapsQuery}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-flex min-h-11 items-center text-xs uppercase tracking-[0.2em] text-gold hover:underline"
+                    >
+                      Google Maps →
+                    </a>
                   </div>
-                  <div>
+                  <div className="border-s-2 border-gold/40 ps-5">
                     <dt className="eyebrow text-muted">{t.contact.hoursLabel}</dt>
-                    <dd className="mt-3 text-base font-light leading-relaxed text-foreground/90">
-                      {t.contact.hoursWeekday}
-                      <br />
-                      {t.contact.hoursSaturday}
+                    <dd className="mt-2 space-y-1 text-base font-light text-foreground/90">
+                      <p>{t.contact.hoursWeekday}</p>
+                      <p>{t.contact.hoursSaturday}</p>
+                      <p className="text-muted">{t.contact.hoursSunday}</p>
                     </dd>
                   </div>
-                  <div>
+                  <div className="border-s-2 border-gold/40 ps-5">
                     <dt className="eyebrow text-muted">{t.contact.phoneLabel}</dt>
-                    <dd className="mt-3">
+                    <dd className="mt-2 flex flex-col gap-2">
                       <a
-                        href={PHONE}
-                        className="touch-target-block -ms-2 inline-flex ps-2 text-base font-light text-foreground/90 transition-colors hover:text-gold active:text-gold"
+                        href={waBook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="touch-target-block justify-start text-base font-light text-foreground/90 transition-colors hover:text-gold"
                       >
-                        {PHONE_DISPLAY}
+                        WhatsApp · {SITE.phoneDisplay}
+                      </a>
+                      <a
+                        href={telUrl()}
+                        className="touch-target-block justify-start text-sm font-light text-muted transition-colors hover:text-gold"
+                      >
+                        {SITE.phoneDisplay}
                       </a>
                     </dd>
                   </div>
                 </dl>
               </div>
-              <form action="#" method="post" className="lg:pt-12">
+
+              <form action="#" method="post" className="lg:pt-4">
                 <p className="eyebrow text-muted">{t.contact.formEyebrow}</p>
                 <div className="mt-6 space-y-6 sm:mt-8 sm:space-y-8">
                   <div>
@@ -526,64 +647,75 @@ export function LandingPage() {
           </Container>
         </Section>
 
+        {/* Booking CTA */}
         <section
           id="book"
-          className="border-t border-line py-16 sm:py-36"
-          aria-labelledby="cta-heading"
+          className="border-t border-line py-16 sm:py-28"
+          aria-labelledby="booking-heading"
         >
           <Container narrow>
-            <div className="relative overflow-hidden border border-line-strong px-5 py-12 text-center sm:px-16 sm:py-20">
+            <div className="relative overflow-hidden border border-line-strong px-5 py-14 text-center sm:px-12 sm:py-20">
               <div className="absolute inset-0" aria-hidden>
                 <Image
-                  src={images.cta}
+                  src={PAGE_IMAGES.booking}
                   alt=""
                   fill
                   sizes="(max-width: 768px) 100vw, 768px"
-                  className="object-cover object-center opacity-25 saturate-[0.7]"
+                  className="object-cover object-center opacity-20 saturate-[0.65]"
                 />
-                <div className="absolute inset-0 bg-background/85" />
+                <div className="absolute inset-0 bg-background/88" />
               </div>
               <div className="relative z-10">
-                <p className="eyebrow">{t.cta.eyebrow}</p>
+                <p className="eyebrow">{t.booking.eyebrow}</p>
                 <h2
-                  id="cta-heading"
-                  className="headline mt-6 text-3xl sm:mt-8 sm:text-5xl lg:text-6xl"
+                  id="booking-heading"
+                  className="headline mt-6 text-3xl sm:mt-8 sm:text-5xl"
                 >
-                  {t.cta.title}
+                  {t.booking.title}
                 </h2>
-                <p className="body-lg mx-auto mt-4 max-w-sm sm:mt-6">{t.cta.body}</p>
-                <div className="mx-auto mt-10 flex w-full max-w-sm flex-col items-stretch gap-4 sm:mt-12 sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-10">
-                  <PrimaryButton href={PHONE}>{t.cta.button}</PrimaryButton>
+                <p className="body-lg mx-auto mt-4 max-w-md sm:mt-6">
+                  {t.booking.body}
+                </p>
+                <div className="mx-auto mt-10 flex w-full max-w-md flex-col items-stretch gap-4 sm:mt-12">
+                  <GoldButton href={waBook} external>
+                    {t.booking.whatsappCta}
+                  </GoldButton>
                   <a
-                    href={PHONE}
-                    className="touch-target-block justify-center text-base font-light text-muted transition-colors hover:text-gold active:text-gold sm:text-sm"
+                    href={telUrl()}
+                    className="touch-target-block justify-center text-sm font-light text-muted transition-colors hover:text-gold"
                   >
-                    {PHONE_DISPLAY}
+                    {t.booking.phoneCta} · {SITE.phoneDisplay}
                   </a>
                 </div>
+                <p className="mt-8 text-[0.625rem] uppercase tracking-[0.22em] text-muted sm:text-[0.6875rem] sm:tracking-[0.24em]">
+                  {t.booking.note}
+                </p>
               </div>
             </div>
           </Container>
         </section>
       </main>
 
-      <footer className="border-t border-line py-10 pb-[calc(2.5rem+env(safe-area-inset-bottom))] sm:py-12">
+      <footer className="border-t border-line py-10 pb-[calc(5rem+env(safe-area-inset-bottom))] sm:py-12 sm:pb-[calc(2.5rem+env(safe-area-inset-bottom))]">
         <Container>
-          <div className="flex flex-col items-center gap-8 sm:flex-row sm:justify-between sm:gap-6">
-            <p className="headline text-lg tracking-[0.14em] uppercase">Piqu</p>
-            <p className="order-3 text-center text-xs uppercase tracking-[0.18em] text-muted sm:order-none sm:text-[0.6875rem] sm:tracking-[0.22em]">
+          <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-start">
+            <div>
+              <p className="headline text-lg tracking-[0.14em] uppercase">Piqu</p>
+              <p className="mt-2 text-xs font-light text-muted">{t.footer.tagline}</p>
+            </div>
+            <p className="text-[0.6875rem] uppercase tracking-[0.18em] text-muted sm:tracking-[0.22em]">
               © {new Date().getFullYear()} · {t.footer.rights}
             </p>
-            <div className="flex w-full justify-center gap-2 sm:w-auto sm:gap-6">
+            <div className="flex gap-4 sm:gap-6">
               <a
                 href="#"
-                className="touch-target px-4 text-xs uppercase tracking-[0.18em] text-muted transition-colors hover:text-foreground active:text-foreground sm:text-[0.6875rem] sm:tracking-[0.22em]"
+                className="touch-target px-3 text-xs uppercase tracking-[0.18em] text-muted transition-colors hover:text-foreground sm:text-[0.6875rem] sm:tracking-[0.22em]"
               >
                 Instagram
               </a>
               <a
                 href="#"
-                className="touch-target px-4 text-xs uppercase tracking-[0.18em] text-muted transition-colors hover:text-foreground active:text-foreground sm:text-[0.6875rem] sm:tracking-[0.22em]"
+                className="touch-target px-3 text-xs uppercase tracking-[0.18em] text-muted transition-colors hover:text-foreground sm:text-[0.6875rem] sm:tracking-[0.22em]"
               >
                 Facebook
               </a>
@@ -591,6 +723,8 @@ export function LandingPage() {
           </div>
         </Container>
       </footer>
+
+      <WhatsAppButton />
     </div>
   );
 }
