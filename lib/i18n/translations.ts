@@ -16,6 +16,7 @@ export type Translations = {
     mainAria: string;
     mobileAria: string;
     services: string;
+    barbers: string;
     craft: string;
     gallery: string;
     contact: string;
@@ -129,6 +130,7 @@ const en: Translations = {
     mainAria: "Main navigation",
     mobileAria: "Mobile navigation",
     services: "Services",
+    barbers: "Barbers",
     craft: "About",
     gallery: "Gallery",
     contact: "Contact",
@@ -146,9 +148,9 @@ const en: Translations = {
       "4.9★ · 1,200+ clients",
       "Kemang · Private chairs",
     ],
-    ctaReserve: "Book via WhatsApp",
+    ctaReserve: "Book appointment",
     ctaMenu: "View services & prices",
-    ctaNote: "Reply within minutes · Same-week slots available",
+    ctaNote: "7-step booking · Confirmed via WhatsApp",
     meta: "Jl. Kemang Raya · Open Tue–Sun · Walk-ins when available",
   },
   stats: {
@@ -276,8 +278,8 @@ const en: Translations = {
   booking: {
     eyebrow: "Ready when you are",
     title: "Secure your chair today",
-    body: "Most clients book via WhatsApp — tell us your preferred service and time. We'll confirm within minutes.",
-    whatsappCta: "Chat on WhatsApp",
+    body: "Choose your service, barber, and time in a few steps — we'll send your request to WhatsApp for confirmation within minutes.",
+    whatsappCta: "Start booking",
     phoneCta: "Or call us",
     note: "Free rescheduling up to 24 hours before your appointment",
   },
@@ -316,6 +318,7 @@ const id: Translations = {
     mainAria: "Navigasi utama",
     mobileAria: "Navigasi seluler",
     services: "Layanan",
+    barbers: "Barber",
     craft: "Tentang",
     gallery: "Galeri",
     contact: "Kontak",
@@ -333,9 +336,9 @@ const id: Translations = {
       "4.9★ · 1.200+ klien",
       "Kemang · Kursi privat",
     ],
-    ctaReserve: "Booking via WhatsApp",
+    ctaReserve: "Booking janji temu",
     ctaMenu: "Lihat layanan & harga",
-    ctaNote: "Balasan dalam hitungan menit · Slot minggu ini tersedia",
+    ctaNote: "Booking 7 langkah · Konfirmasi via WhatsApp",
     meta: "Jl. Kemang Raya · Buka Sel–Min · Walk-in jika ada kursi",
   },
   stats: {
@@ -463,8 +466,8 @@ const id: Translations = {
   booking: {
     eyebrow: "Siap kapan Anda butuh",
     title: "Amankan kursi Anda hari ini",
-    body: "Kebanyakan klien booking lewat WhatsApp — sebutkan layanan dan waktu preferensi. Kami konfirmasi dalam hitungan menit.",
-    whatsappCta: "Chat via WhatsApp",
+    body: "Pilih layanan, barber, dan waktu dalam beberapa langkah — permintaan Anda dikirim ke WhatsApp untuk konfirmasi dalam hitungan menit.",
+    whatsappCta: "Mulai booking",
     phoneCta: "Atau telepon kami",
     note: "Reschedule gratis hingga 24 jam sebelum janji temu",
   },

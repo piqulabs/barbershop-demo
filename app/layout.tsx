@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { Providers } from "./providers";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -41,7 +42,7 @@ export default function RootLayout({
       className={`${dmSans.variable} ${cormorant.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full bg-background text-foreground pb-[env(safe-area-inset-bottom)]">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

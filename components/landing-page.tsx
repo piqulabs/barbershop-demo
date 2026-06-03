@@ -4,36 +4,38 @@ import Image from "next/image";
 import Link from "next/link";
 import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { useLanguage } from "@/components/i18n/language-provider";
+import { BarbersSection } from "@/components/sections/barbers-section";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+import { SERVICE_IDS } from "@/lib/i18n/booking-content";
 import { SITE, telUrl, whatsappUrl } from "@/lib/site-config";
 
 const GALLERY_IMAGES = [
   {
-    src: "https://picsum.photos/seed/piqu-g1/1400/1800",
+    src: "/images/fade_haircut.jpg",
     layout:
       "col-span-2 row-span-2 min-h-[280px] sm:col-span-7 sm:row-span-2 sm:min-h-0",
   },
   {
-    src: "https://picsum.photos/seed/piqu-g2/900/700",
+    src: "/images/hotTowelShave.jpg",
     layout: "col-span-1 row-span-1 min-h-[200px] sm:col-span-5 sm:min-h-[200px]",
   },
   {
-    src: "https://picsum.photos/seed/piqu-g3/900/700",
+    src: "/images/studioBarber.jpg",
     layout: "col-span-1 row-span-1 min-h-[200px] sm:col-span-5 sm:min-h-[200px]",
   },
   {
-    src: "https://picsum.photos/seed/piqu-g4/800/600",
+    src: "/images/beard_Cut.jpg",
     layout: "col-span-1 row-span-1 min-h-[180px] sm:col-span-4 sm:min-h-[180px]",
   },
   {
-    src: "https://picsum.photos/seed/piqu-g5/1200/600",
+    src: "/images/finishing.jpg",
     layout: "col-span-2 row-span-1 min-h-[180px] sm:col-span-8 sm:min-h-[200px]",
   },
 ] as const;
 
 const PAGE_IMAGES = {
   hero: "https://picsum.photos/seed/piqu-hero/1600/2000",
-  craft: "https://picsum.photos/seed/piqu-craft/1800/1000",
+  craft: "/images/mansGroom.jpg",
   booking: "https://picsum.photos/seed/piqu-cta/1600/900",
 };
 
@@ -163,12 +165,11 @@ export function LandingPage() {
 
   if (!t) return null;
 
-  const waBook = whatsappUrl(t.whatsapp.defaultMessage);
-  const waService = (name: string) =>
-    whatsappUrl(`${t.whatsapp.defaultMessage} (${name})`);
+  const waContact = whatsappUrl(t.whatsapp.defaultMessage);
 
   const navLinks = [
     { href: "#services", label: t.nav.services },
+    { href: "#barbers", label: t.nav.barbers },
     { href: "#craft", label: t.nav.craft },
     { href: "#gallery", label: t.nav.gallery },
     { href: "#contact", label: t.nav.contact },
@@ -205,14 +206,12 @@ export function LandingPage() {
 
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <LanguageSwitcher className="hidden sm:flex" />
-            <a
-              href={waBook}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/book"
               className="touch-target hidden text-[0.6875rem] uppercase tracking-[0.28em] text-foreground transition-colors hover:text-gold md:inline-flex"
             >
               {t.nav.reserve}
-            </a>
+            </Link>
 
             <details className="relative lg:hidden">
               <summary className="touch-target cursor-pointer list-none text-xs uppercase tracking-[0.22em] text-muted transition-colors group-open:text-foreground [&::-webkit-details-marker]:hidden">
@@ -236,14 +235,12 @@ export function LandingPage() {
                   </Link>
                 ))}
                 <div className="hairline mx-5 my-2" />
-                <a
-                  href={waBook}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/book"
                   className="touch-target-block w-full justify-start px-5 text-xs uppercase tracking-[0.2em] text-foreground active:bg-white/10"
                 >
                   {t.nav.reserve}
-                </a>
+                </Link>
               </nav>
             </details>
           </div>
@@ -307,7 +304,7 @@ export function LandingPage() {
 
                 <div className="mt-10 flex w-full max-w-sm flex-col gap-4 sm:mt-12 sm:max-w-none">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
-                    <GoldButton href={waBook} external>
+                    <GoldButton href="/book">
                       {t.hero.ctaReserve}
                     </GoldButton>
                     <TextLink href="#services">{t.hero.ctaMenu}</TextLink>
@@ -383,7 +380,7 @@ export function LandingPage() {
             </div>
 
             <ul className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-5">
-              {t.services.items.map((service) => (
+              {t.services.items.map((service, index) => (
                 <li key={service.name}>
                   <article className="service-card group relative flex h-full flex-col border border-line p-6 sm:p-8">
                     {service.popular && (
@@ -404,14 +401,12 @@ export function LandingPage() {
                       <span className="text-[0.625rem] uppercase tracking-[0.2em] text-muted">
                         {service.duration}
                       </span>
-                      <a
-                        href={waService(service.name)}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <Link
+                        href={`/book?service=${SERVICE_IDS[index]}`}
                         className="text-[0.625rem] font-medium uppercase tracking-[0.2em] text-gold opacity-0 transition-opacity group-hover:opacity-100 sm:opacity-100"
                       >
                         {t.services.bookService} →
-                      </a>
+                      </Link>
                     </div>
                   </article>
                 </li>
@@ -429,6 +424,8 @@ export function LandingPage() {
             </p>
           </Container>
         </Section>
+
+        <BarbersSection />
 
         {/* About / Craft */}
         <Section id="craft" className="border-t border-line">
@@ -573,7 +570,7 @@ export function LandingPage() {
                     <dt className="eyebrow text-muted">{t.contact.phoneLabel}</dt>
                     <dd className="mt-2 flex flex-col gap-2">
                       <a
-                        href={waBook}
+                        href={waContact}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="touch-target-block justify-start text-base font-light text-foreground/90 transition-colors hover:text-gold"
@@ -677,7 +674,7 @@ export function LandingPage() {
                   {t.booking.body}
                 </p>
                 <div className="mx-auto mt-10 flex w-full max-w-md flex-col items-stretch gap-4 sm:mt-12">
-                  <GoldButton href={waBook} external>
+                  <GoldButton href="/book">
                     {t.booking.whatsappCta}
                   </GoldButton>
                   <a
