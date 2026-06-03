@@ -1,6 +1,6 @@
 /** Central business details — update once for production */
 export const SITE = {
-  phone: "+6281234567890",
+  phone: "+6281274985509",
   phoneDisplay: "+62 812-3456-7890",
   whatsappMessage: {
     en: "Hi Piqu Barbershop, I'd like to book an appointment.",
